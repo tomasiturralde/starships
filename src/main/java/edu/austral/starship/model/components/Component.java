@@ -10,15 +10,19 @@ import java.util.Observable;
 import java.util.Observer;
 
 public abstract class Component extends Observable implements Collisionable<Component> {
-    String id;
-    Vector2 movement;
-    Vector2 position;
+    private String id;
+    private Vector2 movement;
+    private Vector2 position;
     private Shape shape;
-    List<Observer> observers;
-    Visitor assignedVisitor;
+    private List<Observer> observers;
+    private Visitor assignedVisitor;
 
-    Component(){
-
+    public Component(Vector2 movement, Vector2 position, Shape shape, List<Observer> observers, Visitor assignedVisitor) {
+        this.movement = movement;
+        this.position = position;
+        this.shape = shape;
+        this.observers = observers;
+        this.assignedVisitor = assignedVisitor;
     }
 
     @Override
@@ -27,4 +31,48 @@ public abstract class Component extends Observable implements Collisionable<Comp
     }
 
     public abstract void accept(Visitor visitor);
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Vector2 getMovement() {
+        return movement;
+    }
+
+    public void setMovement(Vector2 movement) {
+        this.movement = movement;
+    }
+
+    public Vector2 getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vector2 position) {
+        this.position = position;
+    }
+
+    public void setShape(Shape shape) {
+        this.shape = shape;
+    }
+
+    public List<Observer> getObservers() {
+        return observers;
+    }
+
+    public void setObservers(List<Observer> observers) {
+        this.observers = observers;
+    }
+
+    public Visitor getAssignedVisitor() {
+        return assignedVisitor;
+    }
+
+    public void setAssignedVisitor(Visitor assignedVisitor) {
+        this.assignedVisitor = assignedVisitor;
+    }
 }

@@ -24,7 +24,9 @@ public class GameManager extends PApplet {
 
     public void keyPressed(KeyEvent event) {
         keySet.add(event.getKeyCode());
+        for (Integer keyCode : keySet) {
 
+        }
         gameFramework.keyPressed(event);
     }
 
