@@ -12,7 +12,7 @@ public class Player {
 
 
     class Key {
-        char key;
+        int keyCode;
         String function;
     }
 }

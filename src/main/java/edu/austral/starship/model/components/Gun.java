@@ -17,6 +17,6 @@ public abstract class Gun {
 
     public void shoot(String pId){
         bulletFactory.createBullet(new BulletCollisionVisitor(), Vector2.vector(0,0),
-                Vector2.vector(0,0), new Rectangle(), bulletSize, pId);
+                0, new Rectangle(), bulletSize, pId, 0);
     }
 }

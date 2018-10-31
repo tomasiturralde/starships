@@ -1,23 +1,30 @@
 package edu.austral.starship.view;
 
-import java.awt.*;
-import java.util.Observable;
+import processing.core.PConstants;
+import edu.austral.starship.model.components.Component;
 
 public class VisualSpaceship extends VisualComponent {
 
 
     @Override
-    public void draw(Shape shape) {
-
+    public void draw(Component component) {
+        graphics.pushMatrix();
+        graphics.translate(component.getPosition().getX(), component.getPosition().getY());
+        graphics.rotate(component.getHeading() - PConstants.PI/2);
+        float[][] points =  getPoints(component.getShape());
+        graphics.beginShape();
+        for (float[] point : points) {
+            graphics.vertex(point[0], point[1]);
+        }
+        graphics.endShape(PConstants.CLOSE);
+        graphics.noFill();
+        graphics.stroke(255);
+        graphics.popMatrix();
+//        ts.turn();
     }
 
     @Override
-    public void destroy() {
-
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-
+    public void update(Component component) {
+        draw(component);
     }
 }

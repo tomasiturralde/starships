@@ -1,23 +1,16 @@
 package edu.austral.starship.view;
 
-import java.awt.*;
-import java.util.Observable;
+import edu.austral.starship.model.components.Component;
 
 public class VisualBullet extends VisualComponent {
 
-
     @Override
-    public void draw(Shape shape) {
+    public void draw(Component component) {
 
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-
-    }
-
-    @Override
-    public void destroy() {
+    public void update(Component component) {
 
     }
 }

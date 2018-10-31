@@ -4,12 +4,12 @@ import edu.austral.starship.CustomGameFramework;
 import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.model.components.Bullet;
 import edu.austral.starship.model.visitors.Visitor;
+import edu.austral.starship.view.Observer;
 import edu.austral.starship.view.VisualBullet;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observer;
 
 public abstract class BulletFactory {
 
@@ -19,11 +19,11 @@ public abstract class BulletFactory {
         this.gameFramework = gameFramework;
     }
 
-    public void createBullet(Visitor visitor, Vector2 position, Vector2 movement,
-                             Shape shape, float size, String playerId){
+    public void createBullet(Visitor visitor, Vector2 position, float angle,
+                             Shape shape, float size, String playerId, float heading){
         List<Observer> observers = new ArrayList<>();
         observers.add(new VisualBullet());
-        Bullet bullet = new Bullet(movement, position, shape, observers, visitor, playerId, size);
+        Bullet bullet = new Bullet(angle, heading, position, shape, observers, visitor, playerId, size);
         gameFramework.addBullet(bullet);
     }
 }

@@ -1,22 +1,16 @@
 package edu.austral.starship.view;
 
-import java.awt.*;
-import java.util.Observable;
+import edu.austral.starship.model.components.Component;
 
 public class VisualAsteroid extends VisualComponent {
 
     @Override
-    public void draw(Shape shape) {
+    public void draw(Component component) {
 
     }
 
     @Override
-    public void destroy() {
-
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
+    public void update(Component component) {
 
     }
 }
