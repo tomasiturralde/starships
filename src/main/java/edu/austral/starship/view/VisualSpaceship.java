@@ -2,12 +2,13 @@ package edu.austral.starship.view;
 
 import processing.core.PConstants;
 import edu.austral.starship.model.components.Component;
+import processing.core.PGraphics;
 
 public class VisualSpaceship extends VisualComponent {
 
 
     @Override
-    public void draw(Component component) {
+    public void draw(Component component, PGraphics graphics) {
         graphics.pushMatrix();
         graphics.translate(component.getPosition().getX(), component.getPosition().getY());
         graphics.rotate(component.getHeading() - PConstants.PI/2);
@@ -23,8 +24,4 @@ public class VisualSpaceship extends VisualComponent {
 //        ts.turn();
     }
 
-    @Override
-    public void update(Component component) {
-        draw(component);
-    }
 }

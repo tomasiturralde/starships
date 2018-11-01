@@ -11,7 +11,7 @@ public class PowerUp extends Component {
     private GunDecorator gunDecorator;
 
     public PowerUp(float angle, float heading, Vector2 position, Shape shape,
-                   List<Observer> observers, Visitor assignedVisitor, GunDecorator gunDecorator) {
+                   List<Observer<Component>> observers, Visitor assignedVisitor, GunDecorator gunDecorator) {
         super(angle, heading, position, shape, observers, assignedVisitor);
         this.gunDecorator = gunDecorator;
     }

@@ -12,7 +12,7 @@ public class Asteroid extends Component {
     private float size;
 
     public Asteroid(float angle, float heading, Vector2 position, Shape shape,
-                    List<Observer> observers, Visitor assignedVisitor, int life, float size) {
+                    List<Observer<Component>> observers, Visitor assignedVisitor, int life, float size) {
         super(angle, heading, position, shape, observers, assignedVisitor);
         this.life = life;
         this.size = size;

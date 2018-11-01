@@ -11,7 +11,7 @@ public class Bullet extends Component {
     private String playerId;
     private float size;
 
-    public Bullet(float angle, float heading, Vector2 position, Shape shape, List<Observer> observers,
+    public Bullet(float angle, float heading, Vector2 position, Shape shape, List<Observer<Component>> observers,
                   Visitor assignedVisitor, String playerId, float size) {
         super(angle, heading, position, shape, observers, assignedVisitor);
         this.playerId = playerId;

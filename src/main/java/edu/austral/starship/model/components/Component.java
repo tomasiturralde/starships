@@ -4,6 +4,7 @@ import edu.austral.starship.base.collision.Collisionable;
 import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.model.visitors.Visitor;
 import edu.austral.starship.view.Observer;
+import processing.core.PGraphics;
 
 import java.awt.*;
 import java.util.List;
@@ -15,10 +16,10 @@ public abstract class Component extends Observable implements Collisionable<Comp
     private float heading;
     private Vector2 position;
     private Shape shape;
-    private List<Observer> observers;
+    private List<Observer<Component>> observers;
     private Visitor assignedVisitor;
 
-    public Component(float rotation, float heading, Vector2 position, Shape shape, List<Observer> observers, Visitor assignedVisitor) {
+    public Component(float rotation, float heading, Vector2 position, Shape shape, List<Observer<Component>> observers, Visitor assignedVisitor) {
         this.rotation = rotation;
         this.heading = heading;
         this.position = position;
@@ -71,12 +72,8 @@ public abstract class Component extends Observable implements Collisionable<Comp
         this.shape = shape;
     }
 
-    public List<Observer> getObservers() {
+    public List<Observer<Component>> getObservers() {
         return observers;
-    }
-
-    public void setObservers(List<Observer> observers) {
-        this.observers = observers;
     }
 
     public Visitor getAssignedVisitor() {
@@ -85,5 +82,12 @@ public abstract class Component extends Observable implements Collisionable<Comp
 
     public void setAssignedVisitor(Visitor assignedVisitor) {
         this.assignedVisitor = assignedVisitor;
+    }
+
+    public void notifyObservers(PGraphics graphics) {
+        for (Observer<Component> o :
+                observers) {
+            o.update(this, graphics);
+        }
     }
 }

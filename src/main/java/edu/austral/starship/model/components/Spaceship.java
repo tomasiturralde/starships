@@ -11,7 +11,7 @@ public class Spaceship extends Component {
     private Gun gun;
 
     public Spaceship(float angle, float heading, Vector2 position, Shape shape,
-                     List<Observer> observers, Visitor assignedVisitor, Gun gun) {
+                     List<Observer<Component>> observers, Visitor assignedVisitor, Gun gun) {
         super(angle, heading, position, shape, observers, assignedVisitor);
         this.gun = gun;
     }
@@ -28,5 +28,9 @@ public class Spaceship extends Component {
 
     public void shoot(String pId){
         gun.shoot(pId);
+    }
+
+    public void turn(){
+        setHeading(getHeading() + getRotation());
     }
 }

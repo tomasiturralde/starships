@@ -12,9 +12,13 @@ import java.util.List;
 
 public abstract class VisualComponent implements Observer<Component> {
     String id;
-    PGraphics graphics;
 
-    public abstract void draw(Component component);
+    @Override
+    public void update(Component component, PGraphics graphics) {
+        draw(component, graphics);
+    }
+
+    public abstract void draw(Component component, PGraphics graphics);
 
     static float[][] getPoints(Shape shape) {
         List<float[]> pointList = new ArrayList<>();
