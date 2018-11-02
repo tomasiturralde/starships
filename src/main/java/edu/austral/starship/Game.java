@@ -3,19 +3,18 @@ package edu.austral.starship;
 import edu.austral.starship.model.components.Component;
 import edu.austral.starship.model.components.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
     private List<Component> components;
     private List<Player> players;
     private float timer;
-    private Map map;
 
-    public Game(List<Component> components, List<Player> players, float timer, Map map) {
-        this.components = components;
-        this.players = players;
-        this.timer = timer;
-        this.map = map;
+    public Game() {
+        components = new ArrayList<>();
+        players = new ArrayList<>();
+        timer = 105f;
     }
 
     public List<Component> getComponents() {
@@ -30,7 +29,14 @@ public class Game {
         return timer;
     }
 
-    public Map getMap() {
-        return map;
+    public void addScore(int score, String playerId) {
+        for (Player player : players){
+            if (player.getId().equals(playerId))
+                player.addScore(score);
+        }
+    }
+
+    public void destroyComponent(Component component) {
+        components.remove(component);
     }
 }

@@ -1,8 +1,8 @@
-package edu.austral.starship.view;
-
-import processing.core.PGraphics;
+package edu.austral.starship;
 
 import edu.austral.starship.model.components.Component;
+import processing.core.PConstants;
+import processing.core.PGraphics;
 
 import java.awt.*;
 import java.awt.geom.PathIterator;
@@ -10,17 +10,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class VisualComponent implements Observer<Component> {
-    String id;
+public class Renderer {
 
-    @Override
-    public void update(Component component, PGraphics graphics) {
-        draw(component, graphics);
+    public void draw(Component component, PGraphics graphics) {
+        graphics.pushMatrix();
+        graphics.translate(component.getPosition().getX(), component.getPosition().getY());
+        graphics.rotate(component.getHeading() - PConstants.PI/2);
+        float[][] points =  getPoints(component.getShape());
+        graphics.beginShape();
+        for (float[] point : points) {
+            graphics.vertex(point[0], point[1]);
+        }
+        graphics.endShape(PConstants.CLOSE);
+        graphics.noFill();
+        graphics.stroke(255);
+        graphics.popMatrix();
     }
 
-    public abstract void draw(Component component, PGraphics graphics);
-
-    static float[][] getPoints(Shape shape) {
+    private float[][] getPoints(Shape shape) {
         List<float[]> pointList = new ArrayList<>();
         float[] coords = new float[6];
         int numSubPaths = 0;
@@ -44,5 +51,4 @@ public abstract class VisualComponent implements Observer<Component> {
         }
         throw new IllegalArgumentException("Unclosed path");
     }
-
 }

@@ -2,16 +2,11 @@ package edu.austral.starship.model.factories;
 
 import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.model.components.Asteroid;
-import edu.austral.starship.model.components.Component;
 import edu.austral.starship.model.visitors.AsteroidCollisionVIsitor;
 import edu.austral.starship.model.visitors.Visitor;
-import edu.austral.starship.view.Observer;
-import edu.austral.starship.view.VisualAsteroid;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ConcreteAsteroidFactory extends AsteroidFactory{
@@ -31,9 +26,6 @@ public class ConcreteAsteroidFactory extends AsteroidFactory{
 
         Shape shape = new Ellipse2D.Float(posX, posY, size, size);
 
-        List<Observer<Component>> observers = new ArrayList<>();
-        observers.add(new VisualAsteroid());
-
-        return new Asteroid(0, 0, position, shape, observers, visitor, lives, size);
+        return new Asteroid(0, 0, position, shape, visitor, lives, size);
     }
 }

@@ -1,10 +1,9 @@
 package edu.austral.starship.model.components;
 
-import edu.austral.starship.model.Key;
-
 import java.util.List;
 
 public class Player {
+    private String id;
     private List<Key> keys;
     private int lives;
     private String name;
@@ -26,6 +25,10 @@ public class Player {
                 break;
             }
         }
+    }
+
+    public String getId() {
+        return id;
     }
 
     public List<Key> getKeys() {
@@ -50,6 +53,10 @@ public class Player {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public void addScore(int score) {
+        this.score += score;
     }
 
     public Spaceship getSpaceship() {

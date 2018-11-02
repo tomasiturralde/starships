@@ -1,6 +1,6 @@
-package edu.austral.starship.model;
+package edu.austral.starship.model.components;
 
-import edu.austral.starship.model.components.Spaceship;
+
 import edu.austral.starship.model.components.commands.Command;
 
 public class Key {
