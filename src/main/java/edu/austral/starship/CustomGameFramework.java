@@ -29,6 +29,7 @@ public class CustomGameFramework implements GameFramework {
     private AffineTransform affineTransform = new AffineTransform();
     private BulletCollisionVisitor bulletVisitor = new BulletCollisionVisitor(this);
     private List<Component> componentsToBeDestroyed = new ArrayList<>();
+    private int amountOfAsteroids = 0;
 
     public BulletCollisionVisitor getBulletVisitor() {
         return bulletVisitor;
@@ -36,7 +37,7 @@ public class CustomGameFramework implements GameFramework {
 
     @Override
     public void setup(WindowSettings windowsSettings, ImageLoader imageLoader) {
-        windowsSettings.setSize(1500, 1500);
+        windowsSettings.setSize(1500, 1000);
         asteroidFactory = new ConcreteAsteroidFactory();
         collisionEngine = new CollisionEngine<>();
         game = new Game();
@@ -57,20 +58,20 @@ public class CustomGameFramework implements GameFramework {
         game.getPlayers().add(player);
 
 
-        List<Key> keys1 = new ArrayList<>();
-        Key up1 = new Key(87, new ForwardCommand());
-        keys1.add(up1);
-        Key down1 = new Key(83, new BackwardCommand());
-        keys1.add(down1);
-        Key left1 = new Key(65, new RotateLeftCommand());
-        keys1.add(left1);
-        Key right1 = new Key(68, new RotateRightCommand());
-        keys1.add(right1);
+//        List<Key> keys1 = new ArrayList<>();
+//        Key up1 = new Key(87, new ForwardCommand());
+//        keys1.add(up1);
+//        Key down1 = new Key(83, new BackwardCommand());
+//        keys1.add(down1);
+//        Key left1 = new Key(65, new RotateLeftCommand());
+//        keys1.add(left1);
+//        Key right1 = new Key(68, new RotateRightCommand());
+//        keys1.add(right1);
+//
+//        Player player1 = new Player(keys1, "a", createShip());
+//        game.getPlayers().add(player1);
 
-        Player player1 = new Player(keys1, "a", createShip());
-        game.getPlayers().add(player1);
-
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             spawnAsteroid();
         }
     }
@@ -85,10 +86,14 @@ public class CustomGameFramework implements GameFramework {
         }
         for (Component component : game.getComponents()) {
             renderer.draw(component, graphics);
+            component.move();
+            edges(component);
         }
         collisionEngine.checkCollisions(game.getComponents());
         game.getComponents().removeAll(componentsToBeDestroyed);
         componentsToBeDestroyed = new ArrayList<>();
+        newShips();
+        checkAsteroids();
     }
 
     @Override
@@ -110,6 +115,7 @@ public class CustomGameFramework implements GameFramework {
         affineTransform.rotate(asteroid.getHeading() - PConstants.PI/2);
         affineTransform.createTransformedShape(asteroid.getShape());
         game.getComponents().add(asteroid);
+        amountOfAsteroids++;
     }
 
     private void createPlayer(List<Key> keys, String name){
@@ -118,12 +124,14 @@ public class CustomGameFramework implements GameFramework {
     }
 
     private Spaceship createShip(){
-        int[] x = {-25,0,25};
-        int[] y = {-25, 25, -25};
+        int size = 25;
+        int[] x = {-size + 5,0,size-5};
+        int[] y = {-size, size, -size};
         int posX = ThreadLocalRandom.current().nextInt(0, 1000 + 1);
         int posY = ThreadLocalRandom.current().nextInt(0, 1000 + 1);
-        Spaceship ship = new Spaceship(0, 0, Vector2.vector(posX, posY), new Polygon(x, y, 3),
-                new SpaceshipCollisionVisitor(this), new BasicGun(1.5f, new ConcreteBulletFactory(this)));
+        Spaceship ship = new Spaceship(0, 0, Vector2.vector(posX, posY),
+                new Polygon(x, y, 3), new SpaceshipCollisionVisitor(this),
+                new BasicGun(1.5f, new ConcreteBulletFactory(this)), size);
 
         affineTransform.translate(ship.getPosition().getX(), ship.getPosition().getY());
         affineTransform.rotate(ship.getHeading() - PConstants.PI/2);
@@ -140,8 +148,42 @@ public class CustomGameFramework implements GameFramework {
     public void lifeLost(Spaceship spaceship) {
         for (Player player : game.getPlayers()) {
             if (player.ownShip(spaceship)) {
-                player.checkCollision(spaceship);
-                destroyComponent(spaceship);
+                if (player.hasCollided(spaceship))
+                    destroyComponent(spaceship);
+            }
+        }
+    }
+
+    private void newShips() {
+        for (Player player : game.getPlayers()) {
+            if (player.needsAShip())
+                player.setSpaceship(createShip());
+        }
+    }
+
+    private void edges(Component component) {
+        if (component.getPosition().getX() > 1500 + component.getSize())
+            component.setPosition(Vector2.vector(-component.getSize(), component.getPosition().getY()));
+        else if (component.getPosition().getX() < -component.getSize())
+            component.setPosition(Vector2.vector(1500 + component.getSize(), component.getPosition().getY()));
+        if (component.getPosition().getY() > 1000 + component.getSize())
+            component.setPosition(Vector2.vector(component.getPosition().getX(), -component.getSize()));
+        else if (component.getPosition().getY() < -component.getSize())
+            component.setPosition(Vector2.vector(component.getPosition().getX(), 1000 + component.getSize()));
+    }
+
+    public void removeOneAsteroid(){
+        amountOfAsteroids--;
+    }
+
+    public int getAmountOfAsteroids() {
+        return amountOfAsteroids;
+    }
+
+    private void checkAsteroids() {
+        if (amountOfAsteroids < 10) {
+            for (int i = 0; i < 5; i++) {
+                spawnAsteroid();
             }
         }
     }

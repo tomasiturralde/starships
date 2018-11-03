@@ -6,13 +6,13 @@ import java.awt.*;
 
 public class Asteroid extends Component {
     private int life;
-    private float size;
+    private int velocity;
 
     public Asteroid(float angle, float heading, Vector2 position, Shape shape,
-                    Visitor assignedVisitor, int life, float size) {
-        super(angle, heading, position, shape, assignedVisitor);
+                    Visitor assignedVisitor, int life, float size, int velocity) {
+        super(angle, heading, position, shape, assignedVisitor, size);
         this.life = life;
-        this.size = size;
+        this.velocity = velocity;
     }
 
     @Override
@@ -33,11 +33,8 @@ public class Asteroid extends Component {
         this.life = life;
     }
 
-    public float getSize() {
-        return size;
-    }
-
-    public void setSize(float size) {
-        this.size = size;
+    @Override
+    public void move() {
+        setPosition(getPosition().add(Vector2.vectorFromModule(velocity, getHeading())));
     }
 }

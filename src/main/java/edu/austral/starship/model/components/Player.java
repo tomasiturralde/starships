@@ -10,6 +10,7 @@ public class Player {
     private int score;
     private Spaceship spaceship;
     private float inmunityFrames;
+    private boolean needsAShip;
 
     public Player(List<Key> keys, String name, Spaceship spaceship) {
         this.keys = keys;
@@ -67,6 +68,7 @@ public class Player {
 
     public void setSpaceship(Spaceship spaceship) {
         this.spaceship = spaceship;
+        needsAShip = false;
     }
 
     public float getInmunityFrames() {
@@ -74,24 +76,28 @@ public class Player {
     }
 
     public void setInmunityFrames(float inmunityFrames) {
-        if (this.inmunityFrames > 0)
-            this.inmunityFrames = inmunityFrames;
-        else
-            this.inmunityFrames = 0;
+        this.inmunityFrames = inmunityFrames;
     }
 
     private boolean isInmune(){
         return inmunityFrames > 0;
     }
 
-    public void checkCollision(Spaceship spaceship) {
+    public boolean hasCollided(Spaceship spaceship) {
         if (!isInmune()) {
             this.lives--;
-            setInmunityFrames(50);
+            setInmunityFrames(20000);
+            needsAShip = true;
+            return true;
         }
+        return false;
     }
 
     public boolean ownShip(Spaceship spaceship){
         return this.spaceship.equals(spaceship);
+    }
+
+    public boolean needsAShip() {
+        return needsAShip && lives > 0;
     }
 }

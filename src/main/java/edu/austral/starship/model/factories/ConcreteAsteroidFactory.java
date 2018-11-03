@@ -28,7 +28,11 @@ public class ConcreteAsteroidFactory extends AsteroidFactory{
 
         float heading = (float) ThreadLocalRandom.current().nextDouble(0, Math.PI*2);
 
-        return new Asteroid(0, heading, position, shape, visitor, lives, size);
+        int velocity = ThreadLocalRandom.current().nextInt(-3, 3 + 1);
+        if (velocity == 0)
+            velocity = 1;
+
+        return new Asteroid(0, heading, position, shape, visitor, lives, size, velocity);
     }
 
     private Shape shapeCreator(float size){

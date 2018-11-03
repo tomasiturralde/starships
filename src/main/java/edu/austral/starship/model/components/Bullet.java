@@ -6,12 +6,13 @@ import java.awt.*;
 
 public class Bullet extends Component {
     private String playerId;
-    private float size;
+    private int velocity;
 
-    public Bullet(float angle, float heading, Vector2 position, Shape shape, Visitor assignedVisitor, String playerId, float size) {
-        super(angle, heading, position, shape, assignedVisitor);
+    public Bullet(float angle, float heading, Vector2 position, Shape shape,
+                  Visitor assignedVisitor, String playerId, float size, int velocity) {
+        super(angle, heading, position, shape, assignedVisitor, size);
         this.playerId = playerId;
-        this.size = size;
+        this.velocity = velocity;
     }
 
     @Override
@@ -28,7 +29,8 @@ public class Bullet extends Component {
         return playerId;
     }
 
-    public float getSize() {
-        return size;
+    @Override
+    public void move() {
+        setPosition(getPosition().add(Vector2.vectorFromModule(velocity, getHeading())));
     }
 }

@@ -13,14 +13,17 @@ public abstract class Component implements Collisionable<Component> {
     private Vector2 position;
     private final Shape shape;
     private Visitor assignedVisitor;
+    private float size;
 
-    public Component(float rotation, float heading, Vector2 position, Shape shape, Visitor assignedVisitor) {
+    Component(float rotation, float heading, Vector2 position,
+                     Shape shape, Visitor assignedVisitor, float size) {
         this.rotation = rotation;
         this.heading = heading;
         this.position = position;
         this.shape = shape;
         this.assignedVisitor = assignedVisitor;
         shape.getPathIterator(null ,0);
+        this.size = size;
     }
 
     @Override
@@ -71,5 +74,11 @@ public abstract class Component implements Collisionable<Component> {
 
     public void setAssignedVisitor(Visitor assignedVisitor) {
         this.assignedVisitor = assignedVisitor;
+    }
+
+    public abstract void move();
+
+    public float getSize() {
+        return size;
     }
 }

@@ -2,7 +2,6 @@ package edu.austral.starship.model.factories;
 
 import edu.austral.starship.CustomGameFramework;
 import edu.austral.starship.base.vector.Vector2;
-import java.awt.*;
 
 public abstract class BulletFactory {
 
@@ -12,8 +11,7 @@ public abstract class BulletFactory {
         this.gameFramework = gameFramework;
     }
 
-    public abstract void createBullet(Vector2 position, float angle,
-                             Shape shape, float size, String playerId, float heading);
+    public abstract void createBullet(Vector2 position, float size, String playerId, float heading);
 
     public CustomGameFramework getGameFramework() {
         return gameFramework;

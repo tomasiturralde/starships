@@ -15,6 +15,7 @@ public class SpaceshipCollisionVisitor extends Visitor {
     @Override
     public void visit(Asteroid asteroid) {
         gameFramework.destroyComponent(asteroid);
+        gameFramework.removeOneAsteroid();
     }
 
     @Override

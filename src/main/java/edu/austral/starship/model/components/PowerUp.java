@@ -7,8 +7,9 @@ import java.awt.*;
 public class PowerUp extends Component {
     private GunDecorator gunDecorator;
 
-    public PowerUp(float angle, float heading, Vector2 position, Shape shape, Visitor assignedVisitor, GunDecorator gunDecorator) {
-        super(angle, heading, position, shape, assignedVisitor);
+    public PowerUp(float angle, float heading, Vector2 position,
+                   Shape shape, Visitor assignedVisitor, GunDecorator gunDecorator, float size) {
+        super(angle, heading, position, shape, assignedVisitor, size);
         this.gunDecorator = gunDecorator;
     }
 
@@ -20,5 +21,12 @@ public class PowerUp extends Component {
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public void move() {}
+
+    public GunDecorator getGunDecorator() {
+        return gunDecorator;
     }
 }
