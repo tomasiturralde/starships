@@ -6,8 +6,8 @@ import edu.austral.starship.model.components.*;
 public abstract class Visitor {
     CustomGameFramework gameFramework;
 
-
-    public Visitor() {
+    public Visitor(CustomGameFramework gameFramework) {
+        this.gameFramework = gameFramework;
     }
 
     public abstract void visit(Asteroid asteroid);

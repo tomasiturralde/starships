@@ -14,8 +14,6 @@ public class Renderer {
 
     public void draw(Component component, PGraphics graphics) {
         graphics.pushMatrix();
-        graphics.translate(component.getPosition().getX(), component.getPosition().getY());
-        graphics.rotate(component.getHeading() - PConstants.PI/2);
         float[][] points =  getPoints(component.getShape());
         graphics.beginShape();
         for (float[] point : points) {

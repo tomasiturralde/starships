@@ -1,31 +1,53 @@
 package edu.austral.starship.model.factories;
 
+import edu.austral.starship.CustomGameFramework;
 import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.model.components.Asteroid;
 import edu.austral.starship.model.visitors.AsteroidCollisionVIsitor;
 import edu.austral.starship.model.visitors.Visitor;
 
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ConcreteAsteroidFactory extends AsteroidFactory{
 
     @Override
-    public Asteroid create() {
-        float posX = ThreadLocalRandom.current().nextInt(0, 500 + 1);
-        float posY = ThreadLocalRandom.current().nextInt(0, 500 + 1);
+    public Asteroid create(CustomGameFramework gameFramework) {
+        float posX = ThreadLocalRandom.current().nextInt(0, 1000 + 1);
+        float posY = ThreadLocalRandom.current().nextInt(0, 1000 + 1);
         Vector2 position = Vector2.vector(posX, posY);
 
-        float size = ThreadLocalRandom.current().nextInt(0, 70 + 1);
+        float size = ThreadLocalRandom.current().nextInt(15, 70 + 1);
 
         //Calc lives
         int lives = 1;
 
-        Visitor visitor = new AsteroidCollisionVIsitor();
+        Visitor visitor = new AsteroidCollisionVIsitor(gameFramework);
 
-        Shape shape = new Ellipse2D.Float(posX, posY, size, size);
+        Shape shape = shapeCreator(size);
 
-        return new Asteroid(0, 0, position, shape, visitor, lives, size);
+        float heading = (float) ThreadLocalRandom.current().nextDouble(0, Math.PI*2);
+
+        return new Asteroid(0, heading, position, shape, visitor, lives, size);
+    }
+
+    private Shape shapeCreator(float size){
+        int amountOfVertices = ThreadLocalRandom.current().nextInt(5, 15 + 1);
+        int[] xPoints = new int[amountOfVertices];
+        int[] yPoints = new int[amountOfVertices];
+        int offset;
+
+        for (int i = 0; i < amountOfVertices; i++) {
+            offset = ThreadLocalRandom.current().nextInt(-10, 20 + 1);
+            float angle = map(i, amountOfVertices);
+            xPoints[i] = (int)((size + offset) * Math.cos(angle));
+            yPoints[i] = (int)((size + offset)* Math.sin(angle));
+        }
+
+        return new Polygon(xPoints, yPoints, amountOfVertices);
+    }
+
+    private float map(float value, float stop1) {
+        return (float) 0 + ((float) 6.2831855 - (float) 0) * ((value - (float) 0) / (stop1 - (float) 0));
     }
 }

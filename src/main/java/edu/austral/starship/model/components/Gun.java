@@ -2,7 +2,6 @@ package edu.austral.starship.model.components;
 
 import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.model.factories.BulletFactory;
-import edu.austral.starship.model.visitors.BulletCollisionVisitor;
 
 import java.awt.*;
 
@@ -16,7 +15,7 @@ public abstract class Gun {
     }
 
     public void shoot(String pId){
-        bulletFactory.createBullet(new BulletCollisionVisitor(), Vector2.vector(0,0),
+        bulletFactory.createBullet(Vector2.vector(0,0),
                 0, new Rectangle(), bulletSize, pId, 0);
     }
 }

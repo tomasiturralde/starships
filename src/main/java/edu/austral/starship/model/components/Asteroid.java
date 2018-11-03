@@ -24,4 +24,20 @@ public class Asteroid extends Component {
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
+
+    public int getLife() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life = life;
+    }
+
+    public float getSize() {
+        return size;
+    }
+
+    public void setSize(float size) {
+        this.size = size;
+    }
 }

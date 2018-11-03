@@ -4,13 +4,14 @@ import edu.austral.starship.base.collision.Collisionable;
 import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.model.visitors.Visitor;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 public abstract class Component implements Collisionable<Component> {
     private String id;
     private float rotation;
     private float heading;
     private Vector2 position;
-    private Shape shape;
+    private final Shape shape;
     private Visitor assignedVisitor;
 
     public Component(float rotation, float heading, Vector2 position, Shape shape, Visitor assignedVisitor) {
@@ -24,7 +25,10 @@ public abstract class Component implements Collisionable<Component> {
 
     @Override
     public Shape getShape() {
-        return shape;
+        AffineTransform at = new AffineTransform();
+        at.translate(position.getX(), position.getY());
+        at.rotate(heading - Math.PI/2);
+        return at.createTransformedShape(shape);
     }
 
     public abstract void accept(Visitor visitor);
@@ -59,10 +63,6 @@ public abstract class Component implements Collisionable<Component> {
 
     public void setPosition(Vector2 position) {
         this.position = position;
-    }
-
-    public void setShape(Shape shape) {
-        this.shape = shape;
     }
 
     public Visitor getAssignedVisitor() {
