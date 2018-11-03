@@ -53,6 +53,8 @@ public class CustomGameFramework implements GameFramework {
         keys.add(left);
         Key right = new Key(PGraphics.RIGHT, new RotateRightCommand());
         keys.add(right);
+        Key shoot = new Key(32, new FireCommand());
+        keys.add(shoot);
 
         Player player = new Player(keys, "a", createShip());
         game.getPlayers().add(player);
@@ -82,7 +84,7 @@ public class CustomGameFramework implements GameFramework {
             for (Integer i : keySet) {
                 player.checkKey(i);
             }
-            player.setInmunityFrames(player.getInmunityFrames() - timeSinceLastDraw);
+            player.setImmunityFrames(player.getImmunityFrames() - timeSinceLastDraw);
         }
         for (Component component : game.getComponents()) {
             renderer.draw(component, graphics);
@@ -98,6 +100,7 @@ public class CustomGameFramework implements GameFramework {
 
     @Override
     public void keyPressed(KeyEvent event) {
+
     }
 
     @Override
@@ -106,6 +109,9 @@ public class CustomGameFramework implements GameFramework {
     }
 
     public void addBullet(Bullet bullet){
+        affineTransform.translate(bullet.getPosition().getX(), bullet.getPosition().getY());
+        affineTransform.rotate(bullet.getHeading() - PConstants.PI/2);
+        affineTransform.createTransformedShape(bullet.getShape());
         game.getComponents().add(bullet);
     }
 
@@ -131,7 +137,7 @@ public class CustomGameFramework implements GameFramework {
         int posY = ThreadLocalRandom.current().nextInt(0, 1000 + 1);
         Spaceship ship = new Spaceship(0, 0, Vector2.vector(posX, posY),
                 new Polygon(x, y, 3), new SpaceshipCollisionVisitor(this),
-                new BasicGun(1.5f, new ConcreteBulletFactory(this)), size);
+                new BasicGun(2f, new ConcreteBulletFactory(this)), size);
 
         affineTransform.translate(ship.getPosition().getX(), ship.getPosition().getY());
         affineTransform.rotate(ship.getHeading() - PConstants.PI/2);

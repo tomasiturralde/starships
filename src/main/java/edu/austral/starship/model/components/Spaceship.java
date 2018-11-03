@@ -24,7 +24,7 @@ public class Spaceship extends Component {
     }
 
     public void shoot(String pId){
-        gun.shoot(pId);
+        gun.shoot(pId, getPosition(), getHeading());
     }
 
     public void turn(){

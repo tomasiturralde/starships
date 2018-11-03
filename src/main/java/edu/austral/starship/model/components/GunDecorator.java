@@ -1,5 +1,6 @@
 package edu.austral.starship.model.components;
 
+import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.model.factories.BulletFactory;
 
 public abstract class GunDecorator extends Gun{
@@ -11,7 +12,7 @@ public abstract class GunDecorator extends Gun{
     }
 
     @Override
-    public void shoot(String pId) {
+    public void shoot(String pId, Vector2 position, float heading) {
 
     }
 }

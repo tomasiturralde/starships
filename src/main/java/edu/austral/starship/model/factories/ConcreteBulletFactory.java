@@ -5,7 +5,6 @@ import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.model.components.Bullet;
 
 import java.awt.*;
-import java.awt.geom.Line2D;
 
 public class ConcreteBulletFactory extends BulletFactory {
 
@@ -15,11 +14,16 @@ public class ConcreteBulletFactory extends BulletFactory {
 
     public void createBullet(Vector2 position, float size, String playerId, float heading){
 
-        Shape shape = new Line2D.Float();
+        Vector2 offsetPosition = position.add(Vector2.vectorFromModule(30, heading));
+        int aSize = (int)size;
+        int[] x = {-aSize,0,aSize};
+        int[] y = {-aSize, aSize, -aSize};
+
+        Shape shape = new Polygon(x, y, 3);
 
         int velocity = 5;
 
-        Bullet bullet = new Bullet(0, heading, position, shape,
+        Bullet bullet = new Bullet(0, heading, offsetPosition, shape,
                 getGameFramework().getBulletVisitor(), playerId, size, velocity);
         getGameFramework().addBullet(bullet);
     }
