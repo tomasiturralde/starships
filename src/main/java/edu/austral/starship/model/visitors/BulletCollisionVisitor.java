@@ -29,5 +29,7 @@ public class BulletCollisionVisitor extends Visitor {
     }
 
     @Override
-    public void visit(Bullet bullet) {}
+    public void visit(Bullet bullet) {
+        gameFramework.destroyComponent(bullet);
+    }
 }

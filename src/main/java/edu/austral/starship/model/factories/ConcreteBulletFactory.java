@@ -21,7 +21,7 @@ public class ConcreteBulletFactory extends BulletFactory {
 
         Shape shape = new Polygon(x, y, 3);
 
-        int velocity = 5;
+        int velocity = 7;
 
         Bullet bullet = new Bullet(0, heading, offsetPosition, shape,
                 getGameFramework().getBulletVisitor(), playerId, size, velocity);

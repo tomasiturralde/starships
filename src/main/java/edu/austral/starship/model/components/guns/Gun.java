@@ -1,4 +1,4 @@
-package edu.austral.starship.model.components;
+package edu.austral.starship.model.components.guns;
 
 import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.model.factories.BulletFactory;
@@ -12,7 +12,13 @@ public abstract class Gun {
         this.bulletFactory = bulletFactory;
     }
 
-    public void shoot(String pId, Vector2 position, float heading){
-        bulletFactory.createBullet(position, bulletSize, pId, heading);
+    public abstract void shoot(String pId, Vector2 position, float heading);
+
+    public BulletFactory getBulletFactory() {
+        return bulletFactory;
+    }
+
+    public float getBulletSize() {
+        return bulletSize;
     }
 }

@@ -7,8 +7,11 @@ import edu.austral.starship.model.components.Key;
 import edu.austral.starship.model.components.*;
 import edu.austral.starship.model.components.Component;
 import edu.austral.starship.model.components.commands.*;
+import edu.austral.starship.model.components.guns.BasicGun;
+import edu.austral.starship.model.components.guns.DoubleGun;
 import edu.austral.starship.model.factories.*;
 import edu.austral.starship.model.visitors.BulletCollisionVisitor;
+import edu.austral.starship.model.visitors.PowerUpCollisionVisitor;
 import edu.austral.starship.model.visitors.SpaceshipCollisionVisitor;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -28,11 +31,16 @@ public class CustomGameFramework implements GameFramework {
     private Renderer renderer;
     private AffineTransform affineTransform = new AffineTransform();
     private BulletCollisionVisitor bulletVisitor = new BulletCollisionVisitor(this);
+    private ConcreteBulletFactory bulletFactory = new ConcreteBulletFactory(this);
     private List<Component> componentsToBeDestroyed = new ArrayList<>();
     private int amountOfAsteroids = 0;
 
     public BulletCollisionVisitor getBulletVisitor() {
         return bulletVisitor;
+    }
+
+    public ConcreteBulletFactory getBulletFactory() {
+        return bulletFactory;
     }
 
     @Override
@@ -59,7 +67,7 @@ public class CustomGameFramework implements GameFramework {
         Player player = new Player(keys, "a", createShip());
         game.getPlayers().add(player);
 
-
+        createPowerUp();
 //        List<Key> keys1 = new ArrayList<>();
 //        Key up1 = new Key(87, new ForwardCommand());
 //        keys1.add(up1);
@@ -73,9 +81,9 @@ public class CustomGameFramework implements GameFramework {
 //        Player player1 = new Player(keys1, "a", createShip());
 //        game.getPlayers().add(player1);
 
-        for (int i = 0; i < 20; i++) {
-            spawnAsteroid();
-        }
+//        for (int i = 0; i < 20; i++) {
+//            spawnAsteroid();
+//        }
     }
 
     @Override
@@ -95,18 +103,14 @@ public class CustomGameFramework implements GameFramework {
         game.getComponents().removeAll(componentsToBeDestroyed);
         componentsToBeDestroyed = new ArrayList<>();
         newShips();
-        checkAsteroids();
+//        checkAsteroids();
     }
 
     @Override
-    public void keyPressed(KeyEvent event) {
-
-    }
+    public void keyPressed(KeyEvent event) {}
 
     @Override
-    public void keyReleased(KeyEvent event) {
-
-    }
+    public void keyReleased(KeyEvent event) {}
 
     public void addBullet(Bullet bullet){
         affineTransform.translate(bullet.getPosition().getX(), bullet.getPosition().getY());
@@ -115,7 +119,7 @@ public class CustomGameFramework implements GameFramework {
         game.getComponents().add(bullet);
     }
 
-    public void spawnAsteroid(){
+    private void spawnAsteroid(){
         Asteroid asteroid = asteroidFactory.create(this);
         affineTransform.translate(asteroid.getPosition().getX(), asteroid.getPosition().getY());
         affineTransform.rotate(asteroid.getHeading() - PConstants.PI/2);
@@ -145,6 +149,21 @@ public class CustomGameFramework implements GameFramework {
 
         game.getComponents().add(ship);
         return ship;
+    }
+
+    private void createPowerUp(){
+        int size = 10;
+        int[] x = {-size, 0, size, 0};
+        int[] y = {0, size, 0, -size};
+
+        PowerUp po = new PowerUp(0, 0, Vector2.vector(400, 400), new Polygon(x, y, 4),
+                new PowerUpCollisionVisitor(this), new DoubleGun(2f, bulletFactory), size);
+
+        affineTransform.translate(po.getPosition().getX(), po.getPosition().getY());
+        affineTransform.rotate(po.getHeading() - PConstants.PI/2);
+        affineTransform.createTransformedShape(po.getShape());
+
+        game.getComponents().add(po);
     }
 
     public void destroyComponent(Component component) {
@@ -180,10 +199,6 @@ public class CustomGameFramework implements GameFramework {
 
     public void removeOneAsteroid(){
         amountOfAsteroids--;
-    }
-
-    public int getAmountOfAsteroids() {
-        return amountOfAsteroids;
     }
 
     private void checkAsteroids() {

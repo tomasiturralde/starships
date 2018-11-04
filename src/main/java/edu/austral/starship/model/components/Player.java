@@ -18,14 +18,16 @@ public class Player {
         this.spaceship = spaceship;
         this.lives = 3;
         this.score = 0;
-        this.immunityFrames = 0;
+        this.immunityFrames = 20000;
     }
 
     public void checkKey(int keyCode){
-        for (Key key: keys) {
-            if (key.getKeyCode() == keyCode){
-                key.execute(spaceship);
-                break;
+        if (lives > 0) {
+            for (Key key : keys) {
+                if (key.getKeyCode() == keyCode) {
+                    key.execute(spaceship);
+                    break;
+                }
             }
         }
     }

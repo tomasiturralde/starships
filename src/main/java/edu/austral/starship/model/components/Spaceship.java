@@ -1,6 +1,7 @@
 package edu.austral.starship.model.components;
 
 import edu.austral.starship.base.vector.Vector2;
+import edu.austral.starship.model.components.guns.Gun;
 import edu.austral.starship.model.visitors.Visitor;
 import java.awt.*;
 
@@ -29,6 +30,10 @@ public class Spaceship extends Component {
 
     public void turn(){
         setHeading(getHeading() + getRotation());
+    }
+
+    public void setGun(Gun gun) {
+        this.gun = gun;
     }
 
     @Override

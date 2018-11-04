@@ -27,6 +27,6 @@ public class AsteroidCollisionVIsitor extends Visitor{
 
     @Override
     public void visit(Bullet bullet) {
-
+        gameFramework.destroyComponent(bullet);
     }
 }
