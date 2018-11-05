@@ -27,12 +27,12 @@ public class CustomGameFramework implements GameFramework {
     private CollisionEngine<Component> collisionEngine;
     private AsteroidFactory asteroidFactory;
     private Renderer renderer;
-    private AffineTransform affineTransform;
-    private BulletCollisionVisitor bulletVisitor;
     private BulletFactory bulletFactory;
+    private BulletCollisionVisitor bulletVisitor;
+    private AffineTransform affineTransform;
     private List<Component> componentsToBeDestroyed;
     private int amountOfAsteroids;
-    private float powerUpCounter;
+    private float powerUpTimer;
     private PowerUpFactory powerUpFactory;
 
     public BulletCollisionVisitor getBulletVisitor() {
@@ -55,8 +55,9 @@ public class CustomGameFramework implements GameFramework {
         bulletFactory = new ConcreteBulletFactory(this);
         componentsToBeDestroyed = new ArrayList<>();
         amountOfAsteroids = 0;
-        powerUpFactory = new ConcretePowerUpFactory(this);
-        powerUpCounter = 50000;
+        powerUpFactory = new ConcretePowerUpFactory();
+        powerUpTimer = 50000;
+
 
 
         List<Key> keys = new ArrayList<>();
@@ -87,9 +88,9 @@ public class CustomGameFramework implements GameFramework {
 //        Player player1 = new Player(keys1, "a", createShip());
 //        game.getPlayers().add(player1);
 
-//        for (int i = 0; i < 20; i++) {
-//            spawnAsteroid();
-//        }
+        for (int i = 0; i < 20; i++) {
+            spawnAsteroid();
+        }
     }
 
     @Override
@@ -109,7 +110,7 @@ public class CustomGameFramework implements GameFramework {
         game.getComponents().removeAll(componentsToBeDestroyed);
         componentsToBeDestroyed = new ArrayList<>();
         newShips();
-//        checkAsteroids();
+        checkAsteroids();
         checkPowerUps(timeSinceLastDraw);
     }
 
@@ -159,21 +160,21 @@ public class CustomGameFramework implements GameFramework {
     }
 
     private void checkPowerUps(float timer) {
-        if (powerUpCounter > 0)
-            powerUpCounter -= timer;
+        if (powerUpTimer > 0)
+            powerUpTimer -= timer;
         else
             createPowerUp();
     }
 
     private void createPowerUp(){
-        PowerUp po = powerUpFactory.create();
+        PowerUp po = powerUpFactory.create(this);
         affineTransform.translate(po.getPosition().getX(), po.getPosition().getY());
         affineTransform.rotate(po.getHeading() - PConstants.PI/2);
         affineTransform.createTransformedShape(po.getShape());
 
         game.getComponents().add(po);
 
-        powerUpCounter = 50000;
+        powerUpTimer = 50000;
     }
 
     public void destroyComponent(Component component) {

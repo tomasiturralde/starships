@@ -12,12 +12,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ConcretePowerUpFactory extends PowerUpFactory{
 
-    public ConcretePowerUpFactory(CustomGameFramework gameFramework) {
-        super(gameFramework);
-    }
-
     @Override
-    public PowerUp create() {
+    public PowerUp create(CustomGameFramework gameFramework) {
         int size = 10;
         int[] x = {-size, 0, size, 0};
         int[] y = {0, size, 0, -size};
@@ -27,9 +23,9 @@ public class ConcretePowerUpFactory extends PowerUpFactory{
         int posY = ThreadLocalRandom.current().nextInt(0, 1000 + 1);
         Vector2 position = Vector2.vector(posX, posY);
 
-        PowerUpCollisionVisitor visitor = new PowerUpCollisionVisitor(getGameFramework());
+        PowerUpCollisionVisitor visitor = new PowerUpCollisionVisitor(gameFramework);
 
-        Gun gun = new DoubleGun(2f, getGameFramework().getBulletFactory());
+        Gun gun = new DoubleGun(2f, gameFramework.getBulletFactory());
 
         return new PowerUp(0, 0, position, shape, visitor, gun, size);
     }
