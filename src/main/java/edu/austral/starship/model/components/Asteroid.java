@@ -29,8 +29,8 @@ public class Asteroid extends Component {
         return life;
     }
 
-    public void setLife(int life) {
-        this.life = life;
+    public void loseALife() {
+        life--;
     }
 
     @Override

@@ -13,14 +13,13 @@ public class ConcreteAsteroidFactory extends AsteroidFactory{
 
     @Override
     public Asteroid create(CustomGameFramework gameFramework) {
-        float posX = ThreadLocalRandom.current().nextInt(0, 1500 + 1);
-        float posY = ThreadLocalRandom.current().nextInt(0, 1000 + 1);
+        int posX = ThreadLocalRandom.current().nextInt(0, 1500 + 1);
+        int posY = ThreadLocalRandom.current().nextInt(0, 1000 + 1);
         Vector2 position = Vector2.vector(posX, posY);
 
         float size = ThreadLocalRandom.current().nextInt(15, 70 + 1);
 
-        //Calc lives
-        int lives = 1;
+        int lives =  1 + (int)(size/20);
 
         Visitor visitor = new AsteroidCollisionVIsitor(gameFramework);
 

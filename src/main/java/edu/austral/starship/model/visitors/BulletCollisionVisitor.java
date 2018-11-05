@@ -14,7 +14,10 @@ public class BulletCollisionVisitor extends Visitor {
 
     @Override
     public void visit(Asteroid asteroid) {
-        gameFramework.destroyComponent(asteroid);
+        if (asteroid.getLife() > 0)
+            asteroid.loseALife();
+        else
+            gameFramework.destroyComponent(asteroid);
         gameFramework.removeOneAsteroid();
     }
 
@@ -29,7 +32,5 @@ public class BulletCollisionVisitor extends Visitor {
     }
 
     @Override
-    public void visit(Bullet bullet) {
-        gameFramework.destroyComponent(bullet);
-    }
+    public void visit(Bullet bullet) {}
 }

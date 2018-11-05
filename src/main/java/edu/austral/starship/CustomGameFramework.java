@@ -8,10 +8,8 @@ import edu.austral.starship.model.components.*;
 import edu.austral.starship.model.components.Component;
 import edu.austral.starship.model.components.commands.*;
 import edu.austral.starship.model.components.guns.BasicGun;
-import edu.austral.starship.model.components.guns.DoubleGun;
 import edu.austral.starship.model.factories.*;
 import edu.austral.starship.model.visitors.BulletCollisionVisitor;
-import edu.austral.starship.model.visitors.PowerUpCollisionVisitor;
 import edu.austral.starship.model.visitors.SpaceshipCollisionVisitor;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -29,17 +27,19 @@ public class CustomGameFramework implements GameFramework {
     private CollisionEngine<Component> collisionEngine;
     private AsteroidFactory asteroidFactory;
     private Renderer renderer;
-    private AffineTransform affineTransform = new AffineTransform();
-    private BulletCollisionVisitor bulletVisitor = new BulletCollisionVisitor(this);
-    private ConcreteBulletFactory bulletFactory = new ConcreteBulletFactory(this);
-    private List<Component> componentsToBeDestroyed = new ArrayList<>();
-    private int amountOfAsteroids = 0;
+    private AffineTransform affineTransform;
+    private BulletCollisionVisitor bulletVisitor;
+    private BulletFactory bulletFactory;
+    private List<Component> componentsToBeDestroyed;
+    private int amountOfAsteroids;
+    private float powerUpCounter;
+    private PowerUpFactory powerUpFactory;
 
     public BulletCollisionVisitor getBulletVisitor() {
         return bulletVisitor;
     }
 
-    public ConcreteBulletFactory getBulletFactory() {
+    public BulletFactory getBulletFactory() {
         return bulletFactory;
     }
 
@@ -50,6 +50,13 @@ public class CustomGameFramework implements GameFramework {
         collisionEngine = new CollisionEngine<>();
         game = new Game();
         renderer = new Renderer();
+        affineTransform = new AffineTransform();
+        bulletVisitor = new BulletCollisionVisitor(this);
+        bulletFactory = new ConcreteBulletFactory(this);
+        componentsToBeDestroyed = new ArrayList<>();
+        amountOfAsteroids = 0;
+        powerUpFactory = new ConcretePowerUpFactory(this);
+        powerUpCounter = 50000;
 
 
         List<Key> keys = new ArrayList<>();
@@ -67,7 +74,6 @@ public class CustomGameFramework implements GameFramework {
         Player player = new Player(keys, "a", createShip());
         game.getPlayers().add(player);
 
-        createPowerUp();
 //        List<Key> keys1 = new ArrayList<>();
 //        Key up1 = new Key(87, new ForwardCommand());
 //        keys1.add(up1);
@@ -104,6 +110,7 @@ public class CustomGameFramework implements GameFramework {
         componentsToBeDestroyed = new ArrayList<>();
         newShips();
 //        checkAsteroids();
+        checkPowerUps(timeSinceLastDraw);
     }
 
     @Override
@@ -151,19 +158,22 @@ public class CustomGameFramework implements GameFramework {
         return ship;
     }
 
+    private void checkPowerUps(float timer) {
+        if (powerUpCounter > 0)
+            powerUpCounter -= timer;
+        else
+            createPowerUp();
+    }
+
     private void createPowerUp(){
-        int size = 10;
-        int[] x = {-size, 0, size, 0};
-        int[] y = {0, size, 0, -size};
-
-        PowerUp po = new PowerUp(0, 0, Vector2.vector(400, 400), new Polygon(x, y, 4),
-                new PowerUpCollisionVisitor(this), new DoubleGun(2f, bulletFactory), size);
-
+        PowerUp po = powerUpFactory.create();
         affineTransform.translate(po.getPosition().getX(), po.getPosition().getY());
         affineTransform.rotate(po.getHeading() - PConstants.PI/2);
         affineTransform.createTransformedShape(po.getShape());
 
         game.getComponents().add(po);
+
+        powerUpCounter = 50000;
     }
 
     public void destroyComponent(Component component) {
