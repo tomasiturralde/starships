@@ -9,7 +9,6 @@ import edu.austral.starship.model.components.Component;
 import edu.austral.starship.model.components.commands.*;
 import edu.austral.starship.model.components.guns.BasicGun;
 import edu.austral.starship.model.factories.*;
-import edu.austral.starship.model.visitors.BulletCollisionVisitor;
 import edu.austral.starship.model.visitors.SpaceshipCollisionVisitor;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -28,16 +27,12 @@ public class CustomGameFramework implements GameFramework {
     private AsteroidFactory asteroidFactory;
     private Renderer renderer;
     private BulletFactory bulletFactory;
-    private BulletCollisionVisitor bulletVisitor;
     private AffineTransform affineTransform;
     private List<Component> componentsToBeDestroyed;
     private int amountOfAsteroids;
     private float powerUpTimer;
     private PowerUpFactory powerUpFactory;
-
-    public BulletCollisionVisitor getBulletVisitor() {
-        return bulletVisitor;
-    }
+    private SpaceshipFactory spaceshipFactory;
 
     public BulletFactory getBulletFactory() {
         return bulletFactory;
@@ -51,12 +46,12 @@ public class CustomGameFramework implements GameFramework {
         game = new Game();
         renderer = new Renderer();
         affineTransform = new AffineTransform();
-        bulletVisitor = new BulletCollisionVisitor(this);
         bulletFactory = new ConcreteBulletFactory(this);
         componentsToBeDestroyed = new ArrayList<>();
         amountOfAsteroids = 0;
         powerUpFactory = new ConcretePowerUpFactory();
         powerUpTimer = 50000;
+        spaceshipFactory = new ConcreteSpaceshipFactory();
 
 
 
@@ -142,14 +137,7 @@ public class CustomGameFramework implements GameFramework {
     }
 
     private Spaceship createShip(){
-        int size = 25;
-        int[] x = {-size + 5,0,size-5};
-        int[] y = {-size, size, -size};
-        int posX = ThreadLocalRandom.current().nextInt(0, 1000 + 1);
-        int posY = ThreadLocalRandom.current().nextInt(0, 1000 + 1);
-        Spaceship ship = new Spaceship(0, 0, Vector2.vector(posX, posY),
-                new Polygon(x, y, 3), new SpaceshipCollisionVisitor(this),
-                new BasicGun(2f, new ConcreteBulletFactory(this)), size);
+        Spaceship ship = spaceshipFactory.create(this);
 
         affineTransform.translate(ship.getPosition().getX(), ship.getPosition().getY());
         affineTransform.rotate(ship.getHeading() - PConstants.PI/2);
@@ -157,13 +145,6 @@ public class CustomGameFramework implements GameFramework {
 
         game.getComponents().add(ship);
         return ship;
-    }
-
-    private void checkPowerUps(float timer) {
-        if (powerUpTimer > 0)
-            powerUpTimer -= timer;
-        else
-            createPowerUp();
     }
 
     private void createPowerUp(){
@@ -175,6 +156,13 @@ public class CustomGameFramework implements GameFramework {
         game.getComponents().add(po);
 
         powerUpTimer = 50000;
+    }
+
+    private void checkPowerUps(float timer) {
+        if (powerUpTimer > 0)
+            powerUpTimer -= timer;
+        else
+            createPowerUp();
     }
 
     public void destroyComponent(Component component) {

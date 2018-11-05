@@ -3,7 +3,7 @@ package edu.austral.starship.model.factories;
 import edu.austral.starship.CustomGameFramework;
 import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.model.components.Asteroid;
-import edu.austral.starship.model.visitors.AsteroidCollisionVIsitor;
+import edu.austral.starship.model.visitors.AsteroidCollisionVisitor;
 import edu.austral.starship.model.visitors.Visitor;
 
 import java.awt.*;
@@ -21,7 +21,7 @@ public class ConcreteAsteroidFactory extends AsteroidFactory{
 
         int lives =  1 + (int)(size/20);
 
-        Visitor visitor = new AsteroidCollisionVIsitor(gameFramework);
+        Visitor visitor = new AsteroidCollisionVisitor(gameFramework);
 
         Shape shape = shapeCreator(size);
 

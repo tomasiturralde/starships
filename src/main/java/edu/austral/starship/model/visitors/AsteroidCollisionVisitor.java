@@ -6,9 +6,9 @@ import edu.austral.starship.model.components.Bullet;
 import edu.austral.starship.model.components.PowerUp;
 import edu.austral.starship.model.components.Spaceship;
 
-public class AsteroidCollisionVIsitor extends Visitor{
+public class AsteroidCollisionVisitor extends Visitor {
 
-    public AsteroidCollisionVIsitor(CustomGameFramework gameFramework) {
+    public AsteroidCollisionVisitor(CustomGameFramework gameFramework) {
         super(gameFramework);
     }
 
