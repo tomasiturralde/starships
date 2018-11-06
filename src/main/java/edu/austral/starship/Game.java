@@ -11,7 +11,7 @@ public class Game {
     private List<Player> players;
     private float timer;
 
-    public Game() {
+    Game() {
         components = new ArrayList<>();
         players = new ArrayList<>();
         timer = 105f;
@@ -21,7 +21,7 @@ public class Game {
         return components;
     }
 
-    public List<Player> getPlayers() {
+    List<Player> getPlayers() {
         return players;
     }
 
@@ -29,14 +29,7 @@ public class Game {
         return timer;
     }
 
-    public void addScore(int score, String playerId) {
-        for (Player player : players){
-            if (player.getId().equals(playerId))
-                player.addScore(score);
-        }
-    }
-
-    public void destroyComponent(Component component) {
-        components.remove(component);
+    public void setTimer(float timer) {
+        this.timer = timer;
     }
 }

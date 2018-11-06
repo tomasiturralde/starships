@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 public abstract class Component implements Collisionable<Component> {
-    private String id;
     private float rotation;
     private float heading;
     private Vector2 position;
@@ -35,14 +34,6 @@ public abstract class Component implements Collisionable<Component> {
     }
 
     public abstract void accept(Visitor visitor);
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public float getHeading() {
         return heading;

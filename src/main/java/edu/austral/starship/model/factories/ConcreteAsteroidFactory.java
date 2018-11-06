@@ -4,7 +4,6 @@ import edu.austral.starship.CustomGameFramework;
 import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.model.components.Asteroid;
 import edu.austral.starship.model.visitors.AsteroidCollisionVisitor;
-import edu.austral.starship.model.visitors.Visitor;
 
 import java.awt.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -14,14 +13,14 @@ public class ConcreteAsteroidFactory extends AsteroidFactory{
     @Override
     public Asteroid create(CustomGameFramework gameFramework) {
         int posX = ThreadLocalRandom.current().nextInt(0, 1500 + 1);
-        int posY = ThreadLocalRandom.current().nextInt(0, 1000 + 1);
+        int posY = ThreadLocalRandom.current().nextInt(0, 980 + 1);
         Vector2 position = Vector2.vector(posX, posY);
 
         float size = ThreadLocalRandom.current().nextInt(15, 70 + 1);
 
         int lives =  1 + (int)(size/20);
 
-        Visitor visitor = new AsteroidCollisionVisitor(gameFramework);
+        AsteroidCollisionVisitor visitor = new AsteroidCollisionVisitor(gameFramework);
 
         Shape shape = shapeCreator(size);
 
@@ -30,6 +29,7 @@ public class ConcreteAsteroidFactory extends AsteroidFactory{
         int velocity = ThreadLocalRandom.current().nextInt(-3, 3 + 1);
         if (velocity == 0)
             velocity = 1;
+
 
         return new Asteroid(0, heading, position, shape, visitor, lives, size, velocity);
     }

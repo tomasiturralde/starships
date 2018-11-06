@@ -5,12 +5,11 @@ import edu.austral.starship.model.components.Asteroid;
 import edu.austral.starship.model.components.Bullet;
 import edu.austral.starship.model.components.PowerUp;
 import edu.austral.starship.model.components.Spaceship;
-import edu.austral.starship.model.components.guns.DoubleGun;
-import edu.austral.starship.model.components.guns.TripleGun;
 
-import java.util.concurrent.ThreadLocalRandom;
+
 
 public class PowerUpCollisionVisitor extends Visitor {
+    private PowerUp powerUp;
 
     public PowerUpCollisionVisitor(CustomGameFramework gameFramework) {
         super(gameFramework);
@@ -21,11 +20,8 @@ public class PowerUpCollisionVisitor extends Visitor {
 
     @Override
     public void visit(Spaceship spaceship) {
-        int probability = ThreadLocalRandom.current().nextInt(0, 100 + 1);
-        if (probability <= 70)
-            spaceship.setGun(new DoubleGun(2f, gameFramework.getBulletFactory()));
-        else if (probability > 71)
-            spaceship.setGun(new TripleGun(2f, gameFramework.getBulletFactory()));
+        powerUp.getGun().setGun(spaceship.getGun());
+        spaceship.setGun(powerUp.getGun());
     }
 
     @Override
@@ -34,5 +30,9 @@ public class PowerUpCollisionVisitor extends Visitor {
     @Override
     public void visit(Bullet bullet) {
         gameFramework.destroyComponent(bullet);
+    }
+
+    public void setPowerUp(PowerUp powerUp) {
+        this.powerUp = powerUp;
     }
 }

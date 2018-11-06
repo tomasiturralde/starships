@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Renderer {
+class Renderer {
 
-    public void draw(Component component, PGraphics graphics) {
+    void draw(Component component, PGraphics graphics) {
         graphics.pushMatrix();
         float[][] points =  getPoints(component.getShape());
         graphics.beginShape();

@@ -3,7 +3,6 @@ package edu.austral.starship.model.components;
 import java.util.List;
 
 public class Player {
-    private String id;
     private List<Key> keys;
     private int lives;
     private String name;
@@ -12,10 +11,9 @@ public class Player {
     private float immunityFrames;
     private boolean needsAShip;
 
-    public Player(List<Key> keys, String name, Spaceship spaceship) {
+    public Player(List<Key> keys, String name) {
         this.keys = keys;
         this.name = name;
-        this.spaceship = spaceship;
         this.lives = 3;
         this.score = 0;
         this.immunityFrames = 20000;
@@ -30,10 +28,6 @@ public class Player {
                 }
             }
         }
-    }
-
-    public String getId() {
-        return id;
     }
 
     public List<Key> getKeys() {

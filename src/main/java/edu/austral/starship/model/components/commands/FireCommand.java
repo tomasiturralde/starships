@@ -6,6 +6,6 @@ public class FireCommand implements Command {
 
     @Override
     public void execute(Spaceship spaceship) {
-        spaceship.shoot("CORREGIR");
+        spaceship.shoot();
     }
 }

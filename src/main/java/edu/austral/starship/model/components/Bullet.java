@@ -5,14 +5,14 @@ import edu.austral.starship.model.visitors.Visitor;
 import java.awt.*;
 
 public class Bullet extends Component {
-    private String playerId;
     private int velocity;
+    private PlayerObserver observer;
 
     public Bullet(float angle, float heading, Vector2 position, Shape shape,
-                  Visitor assignedVisitor, String playerId, float size, int velocity) {
+                  Visitor assignedVisitor, float size, int velocity, PlayerObserver observer) {
         super(angle, heading, position, shape, assignedVisitor, size);
-        this.playerId = playerId;
         this.velocity = velocity;
+        this.observer = observer;
     }
 
     @Override
@@ -25,12 +25,12 @@ public class Bullet extends Component {
         visitor.visit(this);
     }
 
-    public String getPlayerId() {
-        return playerId;
-    }
-
     @Override
     public void move() {
         setPosition(getPosition().add(Vector2.vectorFromModule(velocity, getHeading())));
+    }
+
+    public PlayerObserver getObserver() {
+        return observer;
     }
 }

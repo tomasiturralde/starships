@@ -7,11 +7,13 @@ import java.awt.*;
 
 public class Spaceship extends Component {
     private Gun gun;
+    private PlayerObserver observer;
 
     public Spaceship(float angle, float heading, Vector2 position,
-                     Shape shape, Visitor assignedVisitor, Gun gun, float size) {
+                     Shape shape, Visitor assignedVisitor, Gun gun, float size, PlayerObserver observer) {
         super(angle, heading, position, shape, assignedVisitor, size);
         this.gun = gun;
+        this.observer = observer;
     }
 
     @Override
@@ -24,8 +26,8 @@ public class Spaceship extends Component {
         visitor.visit(this);
     }
 
-    public void shoot(String pId){
-        gun.shoot(pId, getPosition(), getHeading());
+    public void shoot(){
+        gun.shoot(getPosition(), getHeading(), gun.getBulletSize(), observer);
     }
 
     public void turn(){
@@ -34,6 +36,14 @@ public class Spaceship extends Component {
 
     public void setGun(Gun gun) {
         this.gun = gun;
+    }
+
+    public Gun getGun() {
+        return gun;
+    }
+
+    public PlayerObserver getObserver() {
+        return observer;
     }
 
     @Override

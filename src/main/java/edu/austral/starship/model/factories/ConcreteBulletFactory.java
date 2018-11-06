@@ -3,8 +3,8 @@ package edu.austral.starship.model.factories;
 import edu.austral.starship.CustomGameFramework;
 import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.model.components.Bullet;
+import edu.austral.starship.model.components.PlayerObserver;
 import edu.austral.starship.model.visitors.BulletCollisionVisitor;
-import edu.austral.starship.model.visitors.Visitor;
 
 import java.awt.*;
 
@@ -14,7 +14,7 @@ public class ConcreteBulletFactory extends BulletFactory {
         super(gameFramework);
     }
 
-    public void createBullet(Vector2 position, float size, String playerId, float heading){
+    public void create(Vector2 position, float size, float heading, PlayerObserver observer){
 
         Vector2 offsetPosition = position.add(Vector2.vectorFromModule(30, heading));
         int aSize = (int)size;
@@ -25,10 +25,12 @@ public class ConcreteBulletFactory extends BulletFactory {
 
         int velocity = 7;
 
-        Visitor visitor = new BulletCollisionVisitor(getGameFramework());
+        BulletCollisionVisitor visitor = new BulletCollisionVisitor(getGameFramework());
 
         Bullet bullet = new Bullet(0, heading, offsetPosition, shape,
-                visitor, playerId, size, velocity);
+                visitor, size, velocity, observer);
+        visitor.setBullet(bullet);
+
         getGameFramework().addBullet(bullet);
     }
 }

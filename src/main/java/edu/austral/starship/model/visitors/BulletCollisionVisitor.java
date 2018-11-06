@@ -7,6 +7,7 @@ import edu.austral.starship.model.components.PowerUp;
 import edu.austral.starship.model.components.Spaceship;
 
 public class BulletCollisionVisitor extends Visitor {
+    private Bullet bullet;
 
     public BulletCollisionVisitor(CustomGameFramework gameFramework) {
         super(gameFramework);
@@ -14,15 +15,21 @@ public class BulletCollisionVisitor extends Visitor {
 
     @Override
     public void visit(Asteroid asteroid) {
+        int score = (int)(asteroid.getSize() * 2);
+        bullet.getObserver().updateScore(score);
         if (asteroid.getLife() > 0)
             asteroid.loseALife();
-        else
+        else {
             gameFramework.destroyComponent(asteroid);
-        gameFramework.removeOneAsteroid();
+            gameFramework.removeOneAsteroid();
+        }
     }
 
     @Override
     public void visit(Spaceship spaceship) {
+        if (!checkForOwnerShip(spaceship))
+            bullet.getObserver().updateScore(400);
+
         gameFramework.lifeLost(spaceship);
     }
 
@@ -33,4 +40,12 @@ public class BulletCollisionVisitor extends Visitor {
 
     @Override
     public void visit(Bullet bullet) {}
+
+    public void setBullet(Bullet bullet) {
+        this.bullet = bullet;
+    }
+
+    private boolean checkForOwnerShip(Spaceship spaceship) {
+        return bullet.getObserver().getOwner().equals(spaceship.getObserver().getOwner());
+    }
 }
