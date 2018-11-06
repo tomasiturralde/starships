@@ -40,7 +40,7 @@ public class CustomGameFramework implements GameFramework {
         asteroidFactory = new ConcreteAsteroidFactory();
         collisionEngine = new CollisionEngine<>();
         game = new Game();
-        game.setTimer(5000);
+        game.setTimer(50000);
         renderer = new Renderer();
         affineTransform = new AffineTransform();
         bulletFactory = new ConcreteBulletFactory(this);
@@ -102,7 +102,7 @@ public class CustomGameFramework implements GameFramework {
             for (Component component : game.getComponents()) {
                 renderer.draw(component, graphics);
                 component.move();
-                edges(component);
+                renderer.edges(component);
             }
             collisionEngine.checkCollisions(game.getComponents());
             game.getComponents().removeAll(componentsToBeDestroyed);
@@ -192,17 +192,6 @@ public class CustomGameFramework implements GameFramework {
             if (player.needsAShip())
                 player.setSpaceship(createShip(player));
         }
-    }
-
-    private void edges(Component component) {
-        if (component.getPosition().getX() > 1500 + component.getSize())
-            component.setPosition(Vector2.vector(-component.getSize(), component.getPosition().getY()));
-        else if (component.getPosition().getX() < -component.getSize())
-            component.setPosition(Vector2.vector(1500 + component.getSize(), component.getPosition().getY()));
-        if (component.getPosition().getY() > 980 + component.getSize())
-            component.setPosition(Vector2.vector(component.getPosition().getX(), -component.getSize()));
-        else if (component.getPosition().getY() < -component.getSize())
-            component.setPosition(Vector2.vector(component.getPosition().getX(), 980 + component.getSize()));
     }
 
     public void removeOneAsteroid(){
