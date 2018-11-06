@@ -2,16 +2,14 @@ package edu.austral.starship;
 
 import edu.austral.starship.base.collision.CollisionEngine;
 import edu.austral.starship.base.framework.*;
-import edu.austral.starship.base.vector.Vector2;
 import edu.austral.starship.model.components.Key;
 import edu.austral.starship.model.components.*;
 import edu.austral.starship.model.components.Component;
 import edu.austral.starship.model.components.commands.*;
 import edu.austral.starship.model.factories.*;
-import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.event.KeyEvent;
-import java.awt.geom.AffineTransform;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -19,16 +17,13 @@ import java.util.Set;
 public class CustomGameFramework implements GameFramework {
     private Game game;
     private CollisionEngine<Component> collisionEngine;
-    private AsteroidFactory asteroidFactory;
     private Renderer renderer;
-    private BulletFactory bulletFactory;
-    private AffineTransform affineTransform;
     private List<Component> componentsToBeDestroyed;
     private int amountOfAsteroids;
     private float powerUpTimer;
-    private PowerUpFactory powerUpFactory;
-    private SpaceshipFactory spaceshipFactory;
     private boolean gameOver;
+    private Spawner spawner;
+    private BulletFactory bulletFactory;
 
     public BulletFactory getBulletFactory() {
         return bulletFactory;
@@ -37,19 +32,15 @@ public class CustomGameFramework implements GameFramework {
     @Override
     public void setup(WindowSettings windowsSettings, ImageLoader imageLoader) {
         windowsSettings.setSize(1500, 980);
-        asteroidFactory = new ConcreteAsteroidFactory();
         collisionEngine = new CollisionEngine<>();
         game = new Game();
         game.setTimer(50000);
         renderer = new Renderer();
-        affineTransform = new AffineTransform();
-        bulletFactory = new ConcreteBulletFactory(this);
         componentsToBeDestroyed = new ArrayList<>();
         amountOfAsteroids = 0;
-        powerUpFactory = new ConcretePowerUpFactory();
         powerUpTimer = 50000;
-        spaceshipFactory = new ConcreteSpaceshipFactory();
-
+        spawner = new Spawner();
+        bulletFactory = new ConcreteBulletFactory(this);
 
 
         List<Key> keys = new ArrayList<>();
@@ -92,7 +83,7 @@ public class CustomGameFramework implements GameFramework {
     @Override
     public void draw(PGraphics graphics, float timeSinceLastDraw, Set<Integer> keySet) {
         if (!gameOver) {
-            setText(graphics);
+            renderer.renderText(graphics, game.getPlayers());
             for (Player player : game.getPlayers()) {
                 for (Integer i : keySet) {
                     player.checkKey(i);
@@ -124,17 +115,12 @@ public class CustomGameFramework implements GameFramework {
     public void keyReleased(KeyEvent event) {}
 
     public void addBullet(Bullet bullet){
-        affineTransform.translate(bullet.getPosition().getX(), bullet.getPosition().getY());
-        affineTransform.rotate(bullet.getHeading() - PConstants.PI/2);
-        affineTransform.createTransformedShape(bullet.getShape());
-        game.getComponents().add(bullet);
+        Bullet newBullet = spawner.addBullet(bullet);
+        game.getComponents().add(newBullet);
     }
 
     private void spawnAsteroid(){
-        Asteroid asteroid = asteroidFactory.create(this);
-        affineTransform.translate(asteroid.getPosition().getX(), asteroid.getPosition().getY());
-        affineTransform.rotate(asteroid.getHeading() - PConstants.PI/2);
-        affineTransform.createTransformedShape(asteroid.getShape());
+        Asteroid asteroid = spawner.spawnAsteroid(this);
         game.getComponents().add(asteroid);
         amountOfAsteroids++;
     }
@@ -146,21 +132,14 @@ public class CustomGameFramework implements GameFramework {
 //    }
 
     private Spaceship createShip(Player player){
-        Spaceship ship = spaceshipFactory.create(this, player);
-
-        affineTransform.translate(ship.getPosition().getX(), ship.getPosition().getY());
-        affineTransform.rotate(ship.getHeading() - PConstants.PI/2);
-        affineTransform.createTransformedShape(ship.getShape());
+        Spaceship ship = spawner.createShip(this, player);
 
         game.getComponents().add(ship);
         return ship;
     }
 
     private void createPowerUp(){
-        PowerUp po = powerUpFactory.create(this);
-        affineTransform.translate(po.getPosition().getX(), po.getPosition().getY());
-        affineTransform.rotate(po.getHeading() - PConstants.PI/2);
-        affineTransform.createTransformedShape(po.getShape());
+        PowerUp po = spawner.createPowerUp(this);
 
         game.getComponents().add(po);
 
@@ -206,31 +185,6 @@ public class CustomGameFramework implements GameFramework {
         }
     }
 
-    private void setText(PGraphics graphics) {
-        int x = 0;
-        for (Player player : game.getPlayers()) {
-            graphics.pushMatrix();
-            graphics.textSize(22);
-            graphics.text(player.getName(), x, 870);
-            graphics.popMatrix();
-            x += 150;
-        }
-        x = 0;
-        for (Player player : game.getPlayers()) {
-            graphics.pushMatrix();
-            graphics.text("Score: " + player.getScore(), x, 920);
-            graphics.popMatrix();
-            x += 150;
-        }
-        x = 0;
-        for (Player player : game.getPlayers()) {
-            graphics.pushMatrix();
-            graphics.text("Lives: " + player.getLives(), x, 970);
-            graphics.popMatrix();
-            x += 150;
-        }
-    }
-
     private void checkForGameOver(float timer) {
         if (game.getTimer() <= 0)
             gameOver = true;
@@ -238,17 +192,12 @@ public class CustomGameFramework implements GameFramework {
             game.setTimer(game.getTimer() - timer);
     }
 
-    private void gameOver(PGraphics graphics){
+    private void gameOver(PGraphics graphics) {
         Player winner = game.getPlayers().get(0);
         for (int i = 1; i < game.getPlayers().size(); i++) {
             if (winner.getScore() < game.getPlayers().get(i).getScore())
                 winner = game.getPlayers().get(i);
         }
-        graphics.pushMatrix();
-        graphics.textSize(60);
-        graphics.text("Game Over", 560, 470);
-        graphics.text("Winner: " + winner.getName(), 500, 560);
-        graphics.popMatrix();
-
+        renderer.renderGameOver(graphics, winner);
     }
 }
