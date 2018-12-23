@@ -34,7 +34,7 @@ public class CustomGameFramework implements GameFramework {
         windowsSettings.setSize(1500, 980);
         collisionEngine = new CollisionEngine<>();
         game = new Game();
-        game.setTimer(50000);
+        game.setTimer(500000000);
         renderer = new Renderer();
         componentsToBeDestroyed = new ArrayList<>();
         amountOfAsteroids = 0;
